@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">NMedia</string>
     <string name="greeting">NMedia!</string>
+    <string name="avatar_description">author_avatar</string>
+    <string name="description_post_menu">Post_menu</string>
+    <string name="description_post_content">content</string>
 </resources>
