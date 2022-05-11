@@ -1,0 +1,122 @@
+package ru.netology.nmedia.data.impl
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.annotation.DrawableRes
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import ru.netology.nmedia.R
+import ru.netology.nmedia.databinding.PostBinding
+import ru.netology.nmedia.dto.Post
+
+const val THOUSAND = 1000
+const val MILLION = THOUSAND * THOUSAND
+
+typealias onButtonClicked = (Post) -> Unit
+
+// у адаптера есть целиком весь список, он знает про все элементы в списке,
+// но он оптимально создает вьюхи только в нужный момент
+
+internal class PostsAdapter(
+    private val onLikeButtonClicked: onButtonClicked,
+    private val onShareButtonClicked: onButtonClicked
+
+) : ListAdapter<Post, PostsAdapter.ViewHolder>(DiffCallback) {
+
+    // на экране телефона только штуки 4 ВьюХолдера создасться и следовательно только 4 вьюхи заинфлейтится
+    // тк экран больше не вмещает, а одновлеменно вьюхи вообще для всех постов раздувать смысла нет
+    // тк их пользователь все равно не увидит, а прога будет сильно тормозить
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = PostBinding.inflate(inflater, parent, false)
+        return ViewHolder(binding, onLikeButtonClicked, onShareButtonClicked)
+    }
+
+    // для перерисовки/перезаполения вьюхи
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
+
+    class ViewHolder(
+        private val binding: PostBinding,
+        onLikeButtonClicked: onButtonClicked,
+        onShareButtonClicked: onButtonClicked
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        private lateinit var post: Post // lateinit var отменяет обязательную инициализацию
+
+        // повесили (проинициализировали 1 раз) слушателя за нажатием лайка, те нажали лайк, во вьюмодели вызовется метод
+        // onLikeClicked, кот в свое время вызовет из репозитория метод like, like получит
+        // текущий пост, лайкнет/дизлайкнет его и обновит данные в liveData
+        // liveData - это живой поток, в кот только одни какие-то данные, самая актуальная последняя инфа.
+        // Вызывая метод value - мы закидываем данные в поток, на кот кто-то где-то подписывается, напр наша viewModel
+        // на поле data подписалась наша activity, поэтому данные обновились в liveData и вызвался перерендеринг
+        init {
+            binding.likeButton.setOnClickListener { onLikeButtonClicked(post) }
+        }
+
+        init {
+            binding.shareButton.setOnClickListener { onShareButtonClicked(post) }
+        }
+
+        fun bind(post: Post) {
+            this.post = post // пост, кот из lateinit
+            with(binding) {
+                authorName.text = post.author
+                content.text = post.content
+                published.text = post.published
+                likeButton.setImageResource(getLikeIconResId(post.likedByMe))
+                shareButton.setImageResource(R.drawable.ic_baseline_share_24)
+                likeNumbers.text = showNumberView(post.likes)
+                shareNumbers.text = showNumberView(post.shares)
+                seenNumbers.text = showNumberView(post.viewings)
+            }
+        }
+
+        @DrawableRes
+        private fun getLikeIconResId(liked: Boolean) =
+            if (liked) R.drawable.ic_liked_24 else R.drawable.ic_baseline_favorite_border_24
+
+
+        private fun showNumberView(currentNumber: Int): String {
+            return when (currentNumber) {
+                in 0..999 -> currentNumber.toString()
+                in THOUSAND..9999 -> {
+                    var numberQuantity =
+                        String.format("%.1f", (currentNumber).toDouble() / THOUSAND)
+                    if (numberQuantity.endsWith(",0")) {
+                        numberQuantity = numberQuantity.substring(
+                            0,
+                            numberQuantity.length - 2
+                        )
+                    }
+                    numberQuantity + "K"
+                }
+                in 10 * THOUSAND..999999 -> {
+                    val numberQuantity = currentNumber / THOUSAND
+                    "$numberQuantity" + "K"
+                }
+                else -> {
+                    var numberQuantity =
+                        String.format("%.1f", (currentNumber).toDouble() / MILLION)
+                    if (numberQuantity.endsWith(",0")) {
+                        numberQuantity = numberQuantity.substring(
+                            0,
+                            numberQuantity.length - 2
+                        )
+                    }
+                    numberQuantity + "M"
+                }
+            }
+        }
+    }
+
+    private object DiffCallback : DiffUtil.ItemCallback<Post>() {
+        override fun areItemsTheSame(oldItem: Post, newItem: Post) =
+            oldItem.id == newItem.id
+
+        override fun areContentsTheSame(oldItem: Post, newItem: Post) =
+            oldItem == newItem
+    }
+}
