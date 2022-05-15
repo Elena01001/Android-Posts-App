@@ -1,7 +1,8 @@
-package ru.netology.nmedia.data.impl
+package ru.netology.nmedia.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -13,15 +14,13 @@ import ru.netology.nmedia.dto.Post
 const val THOUSAND = 1000
 const val MILLION = THOUSAND * THOUSAND
 
-typealias onButtonClicked = (Post) -> Unit
 
 // у адаптера есть целиком весь список, он знает про все элементы в списке,
 // но он оптимально создает вьюхи только в нужный момент
+// Это связующее звено между данными и вьюхами!!!
 
 internal class PostsAdapter(
-    private val onLikeButtonClicked: onButtonClicked,
-    private val onShareButtonClicked: onButtonClicked
-
+    private val interactionListener: PostInteractionListener
 ) : ListAdapter<Post, PostsAdapter.ViewHolder>(DiffCallback) {
 
     // на экране телефона только штуки 4 ВьюХолдера создасться и следовательно только 4 вьюхи заинфлейтится
@@ -30,7 +29,7 @@ internal class PostsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = PostBinding.inflate(inflater, parent, false)
-        return ViewHolder(binding, onLikeButtonClicked, onShareButtonClicked)
+        return ViewHolder(binding, interactionListener)
     }
 
     // для перерисовки/перезаполения вьюхи
@@ -40,11 +39,31 @@ internal class PostsAdapter(
 
     class ViewHolder(
         private val binding: PostBinding,
-        onLikeButtonClicked: onButtonClicked,
-        onShareButtonClicked: onButtonClicked
+        listener: PostInteractionListener
     ) : RecyclerView.ViewHolder(binding.root) {
 
         private lateinit var post: Post // lateinit var отменяет обязательную инициализацию
+
+        private val popupMenu by lazy {
+            PopupMenu(itemView.context, binding.options).apply {
+                inflate(R.menu.options_post)
+                setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.itemId) {
+                        R.id.remove -> { // если нажали на кнопку remove
+                            listener.onRemoveButtonClicked(post)
+                            true
+                        }
+                        R.id.edit -> { // если нажали на кнопку Edit
+                            listener.onEditButtonClicked(post)
+                            true
+                        }
+                        else -> false
+                    }
+                }
+            }
+        }
+
+
 
         // повесили (проинициализировали 1 раз) слушателя за нажатием лайка, те нажали лайк, во вьюмодели вызовется метод
         // onLikeClicked, кот в свое время вызовет из репозитория метод like, like получит
@@ -53,15 +72,16 @@ internal class PostsAdapter(
         // Вызывая метод value - мы закидываем данные в поток, на кот кто-то где-то подписывается, напр наша viewModel
         // на поле data подписалась наша activity, поэтому данные обновились в liveData и вызвался перерендеринг
         init {
-            binding.likeButton.setOnClickListener { onLikeButtonClicked(post) }
+            binding.likeButton.setOnClickListener { listener.onLikeButtonClicked(post) }
         }
 
         init {
-            binding.shareButton.setOnClickListener { onShareButtonClicked(post) }
+            binding.shareButton.setOnClickListener { listener.onShareButtonClicked(post) }
         }
 
         fun bind(post: Post) {
             this.post = post // пост, кот из lateinit
+
             with(binding) {
                 authorName.text = post.author
                 content.text = post.content
@@ -71,6 +91,7 @@ internal class PostsAdapter(
                 likeNumbers.text = showNumberView(post.likes)
                 shareNumbers.text = showNumberView(post.shares)
                 seenNumbers.text = showNumberView(post.viewings)
+                options.setOnClickListener { popupMenu.show() }
             }
         }
 
