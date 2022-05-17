@@ -36,6 +36,8 @@ class MainActivity : AppCompatActivity() {
         binding.saveButton.setOnClickListener {
             val content = binding.contentEditText.text.toString()
             viewModel.onSaveButtonClicked(content)
+            binding.contentEditText.clearFocus() // убираем курсор из пустой строки после нажатия кнопки сохранить
+            binding.contentEditText.hideKeyboard()
         }
 
         binding.cancelButton.setOnClickListener {
