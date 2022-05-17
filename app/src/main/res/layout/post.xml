@@ -89,6 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_spacing"
         android:background="@android:color/transparent"
+        android:contentDescription="@string/description_post_like"
         android:src="@drawable/ic_baseline_favorite_border_24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/contentBarrier" />
@@ -99,9 +100,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/number_spacing"
         android:layout_marginTop="@dimen/common_spacing"
+        android:text="22"
         app:layout_constraintStart_toEndOf="@id/likeButton"
-        app:layout_constraintTop_toBottomOf="@id/contentBarrier"
-        android:text="22" />
+        app:layout_constraintTop_toBottomOf="@id/contentBarrier" />
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/shareButton"
@@ -110,6 +111,7 @@
         android:layout_marginStart="@dimen/common_spacing"
         android:layout_marginTop="@dimen/common_spacing"
         android:background="@android:color/transparent"
+        android:contentDescription="@string/description_post_share"
         android:src="@drawable/ic_baseline_share_24"
         app:layout_constraintStart_toEndOf="@id/likeNumbers"
         app:layout_constraintTop_toBottomOf="@id/contentBarrier" />
@@ -120,18 +122,18 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/number_spacing"
         android:layout_marginTop="@dimen/common_spacing"
+        android:text="10"
         app:layout_constraintStart_toEndOf="@id/shareButton"
-        app:layout_constraintTop_toBottomOf="@id/contentBarrier"
-        android:text="10" />
+        app:layout_constraintTop_toBottomOf="@id/contentBarrier" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/seenNumbers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_spacing"
+        android:text="100"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/contentBarrier"
-        android:text="100" />
+        app:layout_constraintTop_toBottomOf="@id/contentBarrier" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/seenIcon"
