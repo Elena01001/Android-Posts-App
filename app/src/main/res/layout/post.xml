@@ -45,16 +45,16 @@
         app:layout_constraintTop_toBottomOf="@id/authorName"
         tools:text="@sample/posts.json/data/published" />
 
-    <androidx.appcompat.widget.AppCompatImageButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/options"
+        style="@style/Widget.AppTheme.OptionsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/common_spacing"
-        android:background="@android:color/transparent"
         android:contentDescription="@string/description_post_menu"
-        android:src="@drawable/ic_baseline_more_vert_24"
+        android:paddingStart="@dimen/icon_button_padding_size"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlSymmetry" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/headerBarrier"
@@ -83,55 +83,33 @@
         app:barrierDirection="bottom"
         app:constraint_referenced_ids="content" />
 
-    <androidx.appcompat.widget.AppCompatImageButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/likeButton"
+        style="@style/Widget.AppTheme.LikeCheckbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_spacing"
-        android:background="@android:color/transparent"
+        android:checkable="true"
         android:contentDescription="@string/description_post_like"
-        android:src="@drawable/ic_baseline_favorite_border_24"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/contentBarrier" />
+        app:layout_constraintTop_toBottomOf="@id/contentBarrier"
+        tools:text="@sample/posts.json/data/likes" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/likeNumbers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/number_spacing"
-        android:layout_marginTop="@dimen/common_spacing"
-        android:text="22"
-        app:layout_constraintStart_toEndOf="@id/likeButton"
-        app:layout_constraintTop_toBottomOf="@id/contentBarrier" />
-
-    <androidx.appcompat.widget.AppCompatImageButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/shareButton"
+        style="@style/Widget.AppTheme.ShareButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/common_spacing"
-        android:layout_marginTop="@dimen/common_spacing"
-        android:background="@android:color/transparent"
         android:contentDescription="@string/description_post_share"
-        android:src="@drawable/ic_baseline_share_24"
-        app:layout_constraintStart_toEndOf="@id/likeNumbers"
-        app:layout_constraintTop_toBottomOf="@id/contentBarrier" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/shareNumbers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/number_spacing"
-        android:layout_marginTop="@dimen/common_spacing"
-        android:text="10"
-        app:layout_constraintStart_toEndOf="@id/shareButton"
-        app:layout_constraintTop_toBottomOf="@id/contentBarrier" />
+        app:layout_constraintStart_toEndOf="@id/likeButton"
+        app:layout_constraintTop_toBottomOf="@id/contentBarrier"
+        tools:text="@sample/posts.json/data/shares" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/seenNumbers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_spacing"
-        android:text="100"
+        android:text="@sample/posts.json/data/viewings"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/contentBarrier" />
 
