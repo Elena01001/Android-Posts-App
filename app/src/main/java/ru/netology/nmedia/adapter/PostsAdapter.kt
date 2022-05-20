@@ -1,5 +1,7 @@
 package ru.netology.nmedia.adapter
 
+import android.app.Activity
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.PopupMenu
@@ -8,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nmedia.R
+import ru.netology.nmedia.activity.PostContentActivity
 import ru.netology.nmedia.databinding.PostBinding
 import ru.netology.nmedia.dto.Post
 
@@ -51,6 +54,18 @@ internal class PostsAdapter(
                         }
                         R.id.edit -> { // если нажали на кнопку Edit
                             listener.onEditButtonClicked(post.content)
+                            val intent = Intent()
+                            if (binding.content.text.isNullOrBlank()) {
+                                // если в поле ввода текста пусто, то рез-т выполнения активити отменить
+                                // и вкладываем пустой интент
+                                setResult(Activity.RESULT_CANCELED, intent)
+                            } else {
+                                // если все хорошо, то конвертируем текст в строку, укладываем в заготовленный интент
+                                val content = binding.content.text.toString()
+                                intent.putExtra(PostContentActivity.RESULT_KEY, content)
+                                setResult(Activity.RESULT_OK, intent)
+                            }
+                            finish()
                             true
                         }
                         else -> false
