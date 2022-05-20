@@ -11,10 +11,6 @@ import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.PostBinding
 import ru.netology.nmedia.dto.Post
 
-const val THOUSAND = 1000
-const val MILLION = THOUSAND * THOUSAND
-
-
 // у адаптера есть целиком весь список, он знает про все элементы в списке,
 // но он оптимально создает вьюхи только в нужный момент
 // Это связующее звено между данными и вьюхами!!!
@@ -54,7 +50,7 @@ internal class PostsAdapter(
                             true
                         }
                         R.id.edit -> { // если нажали на кнопку Edit
-                            listener.onEditButtonClicked(post)
+                            listener.onEditButtonClicked(post.content)
                             true
                         }
                         else -> false
@@ -94,6 +90,11 @@ internal class PostsAdapter(
                 shareButton.text = showNumberView(post.shares)
                 seenNumbers.text = showNumberView(post.viewings)
             }
+        }
+
+        private companion object {
+            const val THOUSAND = 1000
+            const val MILLION = THOUSAND * THOUSAND
         }
 
         private fun showNumberView(currentNumber: Int): String {
