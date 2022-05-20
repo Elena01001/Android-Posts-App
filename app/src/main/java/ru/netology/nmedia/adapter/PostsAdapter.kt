@@ -63,8 +63,6 @@ internal class PostsAdapter(
             }
         }
 
-
-
         // повесили (проинициализировали 1 раз) слушателя за нажатием лайка, те нажали лайк, во вьюмодели вызовется метод
         // onLikeClicked, кот в свое время вызовет из репозитория метод like, like получит
         // текущий пост, лайкнет/дизлайкнет его и обновит данные в liveData
@@ -79,6 +77,10 @@ internal class PostsAdapter(
             binding.shareButton.setOnClickListener { listener.onShareButtonClicked(post) }
         }
 
+        init {
+            binding.options.setOnClickListener { popupMenu.show() }
+        }
+
         fun bind(post: Post) {
             this.post = post // пост, кот из lateinit
 
@@ -86,19 +88,13 @@ internal class PostsAdapter(
                 authorName.text = post.author
                 content.text = post.content
                 published.text = post.published
-                likeButton.setImageResource(getLikeIconResId(post.likedByMe))
-                shareButton.setImageResource(R.drawable.ic_baseline_share_24)
-                likeNumbers.text = showNumberView(post.likes)
-                shareNumbers.text = showNumberView(post.shares)
+                likeButton.isChecked = post.likedByMe
+                likeButton.text = showNumberView(post.likes)
+                shareButton.setIconResource(R.drawable.ic_baseline_share_24)
+                shareButton.text = showNumberView(post.shares)
                 seenNumbers.text = showNumberView(post.viewings)
-                options.setOnClickListener { popupMenu.show() }
             }
         }
-
-        @DrawableRes
-        private fun getLikeIconResId(liked: Boolean) =
-            if (liked) R.drawable.ic_liked_24 else R.drawable.ic_baseline_favorite_border_24
-
 
         private fun showNumberView(currentNumber: Int): String {
             return when (currentNumber) {
@@ -141,3 +137,4 @@ internal class PostsAdapter(
             oldItem == newItem
     }
 }
+
