@@ -12,19 +12,21 @@ import ru.netology.nmedia.databinding.PostContentActivityBinding
 import ru.netology.nmedia.viewModel.PostViewModel
 
 
-// Здесь мý создаём Explicit Intent, указýвая, объект какого класса его
+// Здесь мý создаём Explicit Intent, указывая, объект какого класса его
 //должен обрабатывать. И мы не только запускаем Activity, мý ещё
 //запускаем его с требованием вернуть нам назад результат (т.е. тот
 //текст, которýй введёт пользователь)
 
 class PostContentActivity : AppCompatActivity() {
 
-    private val viewModel: PostViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val binding = PostContentActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        // обращаемся к intent, с которым Активити была запущена, и достаем данные, переданные через контракт
+        val textToEdit = intent?.extras?.getString(Intent.EXTRA_TEXT) ?: ""
+        binding.edit.setText(textToEdit)
         binding.edit.requestFocus() // как только откроется экран, то курсор поставится на поле edit
         // при нажатии на кнопку ОК формируем пустой интент
         binding.ok.setOnClickListener {
@@ -41,25 +43,15 @@ class PostContentActivity : AppCompatActivity() {
             }
             finish()
         }
-
-        val mainActivityLauncher = registerForActivityResult(
-            MainActivity.EditingResultContract
-        ) { postContent ->
-            postContent ?: return@registerForActivityResult
-            viewModel.onEditButtonClicked(postContent)
-        }
-
-        viewModel.currentPost.observe(this) {
-            mainActivityLauncher.launch(RESULT_KEY)
-        }
     }
 
     // Для создания Intent и обработки возвращаемого результата
-    object ResultContract : ActivityResultContract<Unit, String?>() {
+    object ResultContract : ActivityResultContract<String?, String?>() {
 
         // метод возвращает интент, с кот запутсится наша активити
-        override fun createIntent(context: Context, input: Unit) =
+        override fun createIntent(context: Context, input: String?) =
             Intent(context, PostContentActivity::class.java)
+                .putExtra(Intent.EXTRA_TEXT, input)
 
         override fun parseResult(resultCode: Int, intent: Intent?) =
             if (resultCode == Activity.RESULT_OK) {

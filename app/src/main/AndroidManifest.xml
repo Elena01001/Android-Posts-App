@@ -34,4 +34,11 @@
             android:exported="false" />  <!--2 экран приложения, кот виден Андроиду, но никто кроме нас его не сможет запустить-->
     </application>
 
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="*" />
+        </intent>
+    </queries>
+
 </manifest>

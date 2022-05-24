@@ -3,6 +3,7 @@ package ru.netology.nmedia.activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -53,6 +54,14 @@ class MainActivity : AppCompatActivity() {
             startActivity(shareIntent)
         }
 
+        viewModel.videoPlayEvent.observe(this) { videoLink ->
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(videoLink))
+            // если у-во пользователя может выполнить данную задачу, то запускаем этот интент
+            if (intent.resolveActivity(packageManager) != null) {
+                startActivity(intent)
+            }
+        }
+
         // показываем новый экран в нашем приложении
         // данная ф-ция будет вызвана при завершении PostContentActivity
         val postContentActivityLauncher = registerForActivityResult(
@@ -61,23 +70,9 @@ class MainActivity : AppCompatActivity() {
             postContent ?: return@registerForActivityResult
             viewModel.onSaveButtonClicked(postContent)
         }
-        viewModel.navigateToPostContentScreenEvent.observe(this) {
-            postContentActivityLauncher.launch()
+        viewModel.navigateToPostContentScreenEvent.observe(this) { postContent ->
+            postContentActivityLauncher.launch(postContent)
         }
-
-    }
-
-    object EditingResultContract : ActivityResultContract<String, String?>() {
-
-        override fun createIntent(context: Context, input: String) =
-            Intent(context, PostContentActivity::class.java)
-                .putExtra(Intent.EXTRA_TEXT, input)
-
-        override fun parseResult(resultCode: Int, intent: Intent?) =
-            if (resultCode == Activity.RESULT_OK) {
-                // расковыриваем интент
-                intent?.getStringExtra(PostContentActivity.RESULT_KEY)
-            } else null
     }
 
 }

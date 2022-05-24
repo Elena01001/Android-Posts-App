@@ -3,14 +3,13 @@ package ru.netology.nmedia.adapter
 import android.app.Activity
 import android.content.Intent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nmedia.R
-import ru.netology.nmedia.activity.PostContentActivity
 import ru.netology.nmedia.databinding.PostBinding
 import ru.netology.nmedia.dto.Post
 
@@ -53,19 +52,7 @@ internal class PostsAdapter(
                             true
                         }
                         R.id.edit -> { // если нажали на кнопку Edit
-                            listener.onEditButtonClicked(post.content)
-                            val intent = Intent()
-                            if (binding.content.text.isNullOrBlank()) {
-                                // если в поле ввода текста пусто, то рез-т выполнения активити отменить
-                                // и вкладываем пустой интент
-                                setResult(Activity.RESULT_CANCELED, intent)
-                            } else {
-                                // если все хорошо, то конвертируем текст в строку, укладываем в заготовленный интент
-                                val content = binding.content.text.toString()
-                                intent.putExtra(PostContentActivity.RESULT_KEY, content)
-                                setResult(Activity.RESULT_OK, intent)
-                            }
-                            finish()
+                            listener.onEditButtonClicked(post)
                             true
                         }
                         else -> false
@@ -77,9 +64,7 @@ internal class PostsAdapter(
         // повесили (проинициализировали 1 раз) слушателя за нажатием лайка, те нажали лайк, во вьюмодели вызовется метод
         // onLikeClicked, кот в свое время вызовет из репозитория метод like, like получит
         // текущий пост, лайкнет/дизлайкнет его и обновит данные в liveData
-        // liveData - это живой поток, в кот только одни какие-то данные, самая актуальная последняя инфа.
-        // Вызывая метод value - мы закидываем данные в поток, на кот кто-то где-то подписывается, напр наша viewModel
-        // на поле data подписалась наша activity, поэтому данные обновились в liveData и вызвался перерендеринг
+
         init {
             binding.likeButton.setOnClickListener { listener.onLikeButtonClicked(post) }
         }
@@ -90,6 +75,11 @@ internal class PostsAdapter(
 
         init {
             binding.options.setOnClickListener { popupMenu.show() }
+        }
+
+        init {
+            binding.videoContent.setOnClickListener { listener.onVideoPlayButtonClicked(post)}
+            binding.videoPlay.setOnClickListener { listener.onVideoPlayButtonClicked(post)}
         }
 
         fun bind(post: Post) {
@@ -104,6 +94,8 @@ internal class PostsAdapter(
                 shareButton.setIconResource(R.drawable.ic_baseline_share_24)
                 shareButton.text = showNumberView(post.shares)
                 seenNumbers.text = showNumberView(post.viewings)
+                videoVisibility.visibility =
+                    if (post.videoLink.isBlank()) View.GONE else View.VISIBLE
             }
         }
 

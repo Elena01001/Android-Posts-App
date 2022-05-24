@@ -15,8 +15,15 @@ class PostViewModel : ViewModel(), PostInteractionListener {
     val data get() = repository.data
 
     val sharePostContent = SingleLiveEvent<String>()
-    val navigateToPostContentScreenEvent = SingleLiveEvent<Unit>()
 
+    val videoPlayEvent = SingleLiveEvent<String>()
+
+    // Эта LiveData хранит текст поста, который редактируется, или null, если новый текст добавляется пользователем
+    val navigateToPostContentScreenEvent = SingleLiveEvent<String?>()
+
+    // liveData - это живой поток, в кот только одни какие-то данные, самая актуальная последняя инфа.
+    // Вызывая метод value - мы закидываем данные в поток, на кот кто-то где-то подписывается, напр наша viewModel
+    // на поле data подписалась наша activity, поэтому данные обновились в liveData и вызвался перерендеринг
     val currentPost = MutableLiveData<Post?>(null)
 
     fun onSaveButtonClicked(content: String) { // нужно научить, когда пришел новый пост, а когда неновый для редактирования контента
@@ -37,7 +44,7 @@ class PostViewModel : ViewModel(), PostInteractionListener {
         currentPost.value = null
     }
 
-    fun onAddButtonClicked(){
+    fun onAddButtonClicked() {
         navigateToPostContentScreenEvent.call()
     }
 
@@ -46,9 +53,17 @@ class PostViewModel : ViewModel(), PostInteractionListener {
         sharePostContent.value = post.content
         repository.share(post.id)
     }
+
     override fun onRemoveButtonClicked(post: Post) = repository.delete(post.id)
-    override fun onEditButtonClicked(postContent: String) {
-        navigateToPostContentScreenEvent.call() // отобразится контент текущего поста на экране
+    override fun onEditButtonClicked(post: Post) {
+        currentPost.value = post // закидываем пост в поток
+        navigateToPostContentScreenEvent.value =
+            post.content // отобразится контент текущего поста на экране
+    }
+
+    override fun onVideoPlayButtonClicked(post: Post) {
+        currentPost.value = post // закидываем пост в поток
+        videoPlayEvent.value = post.videoLink
     }
 
 }
