@@ -22,7 +22,8 @@ class InMemoryPostRepository : PostRepository {
             content = "Делиться впечатлениями о любимых фильмах легко, а что если рассказать так, чтобы все заскучали \uD83D\uDE34\n",
             published = "22 сентября в 10:14",
             likedByMe = false,
-            shared = false
+            shared = false,
+            videoLink = "https://www.youtube.com/watch?v=EOOPBW33ZIw"
         ),
         Post(
             id = nextId++,
@@ -78,7 +79,8 @@ class InMemoryPostRepository : PostRepository {
             content = "Привет, это новая Нетология! Когда-то Нетология начиналась с интенсивов по онлайн-маркетингу. Затем появились курсы по дизайну, разработке, аналитике и управлению. Мы растём сами и помогаем расти студентам: от новичков до уверенных профессионалов. Но самое важное остаётся с нами: мы верим, что в каждом уже есть сила, которая заставляет хотеть больше, целиться выше, бежать быстрее. Наша миссия — помочь встать на путь роста и начать цепочку перемен → http://netolo.gy/fyb",
             published = "21 мая в 18:36",
             likedByMe = false,
-            shared = false
+            shared = false,
+            videoLink = "https://www.youtube.com/watch?v=NOVaNe3jx6c&t=477s"
 
         ),
     ).reversed()
@@ -116,7 +118,6 @@ class InMemoryPostRepository : PostRepository {
     override fun save(post: Post) {
         if (post.id == PostRepository.NEW_POST_ID) insert(post) else update(post)
     }
-
 
     private fun update(post: Post) {
         posts = posts.map {

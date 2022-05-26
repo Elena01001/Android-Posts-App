@@ -76,12 +76,39 @@
         app:layout_constraintTop_toBottomOf="@id/headerBarrier"
         tools:text="@sample/posts.json/data/content" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/videoContent"
+        android:layout_width="300dp"
+        android:layout_height="248dp"
+        android:src="@drawable/ic_video_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/content" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/videoPlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_video_play_48"
+        app:layout_constraintBottom_toBottomOf="@id/videoContent"
+        app:layout_constraintEnd_toEndOf="@id/videoContent"
+        app:layout_constraintStart_toStartOf="@id/videoContent"
+        app:layout_constraintTop_toTopOf="@id/videoContent" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/videoVisibility"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:constraint_referenced_ids="videoContent, videoPlay" />
+
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/contentBarrier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="content" />
+        app:constraint_referenced_ids="videoContent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/likeButton"
@@ -99,6 +126,7 @@
         style="@style/Widget.AppTheme.ShareButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_spacing"
         android:contentDescription="@string/description_post_share"
         app:layout_constraintStart_toEndOf="@id/likeButton"
         app:layout_constraintTop_toBottomOf="@id/contentBarrier"
@@ -110,6 +138,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_spacing"
         android:text="@sample/posts.json/data/viewings"
+        app:layout_constraintBottom_toBottomOf="@+id/seenIcon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/contentBarrier" />
 
