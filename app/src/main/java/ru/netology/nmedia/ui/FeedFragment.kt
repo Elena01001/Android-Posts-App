@@ -1,0 +1,90 @@
+package ru.netology.nmedia.ui
+
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
+import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
+import ru.netology.nmedia.R
+import ru.netology.nmedia.adapter.PostsAdapter
+import ru.netology.nmedia.databinding.ActivityMainBinding
+import ru.netology.nmedia.viewModel.PostViewModel
+
+
+class FeedFragment : Fragment() {
+
+    private val viewModel: PostViewModel by viewModels() // делегирование для того, чтобы при перевороте экрана не сбрасывался текст
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewModel.sharePostContent.observe(this) { postContent ->
+            val intent = Intent().apply {
+                action = Intent.ACTION_SEND  // создаем пустой интент и заполняем его через apply
+                putExtra(Intent.EXTRA_TEXT, postContent) // кладем некоторые данные, кот будем share
+                type = "text/plain"
+            }
+            val shareIntent =
+                Intent.createChooser(
+                    intent,
+                    getString(R.string.description_post_share) // создаем меню выбора
+                )
+            startActivity(shareIntent)
+        }
+
+        viewModel.videoPlayEvent.observe(this) { videoLink ->
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(videoLink))
+            // если у-во пользователя может выполнить данную задачу, то запускаем этот интент
+            // if (intent.resolveActivity(packageManager) != null) {
+            startActivity(intent)
+        }
+
+        // показываем новый экран в нашем приложении
+        // данная ф-ция будет вызвана при завершении PostContentActivity
+        setFragmentResultListener(
+            requestKey = PostContentFragment.REQUEST_KEY
+        ) { requestKey, bundle ->
+            if (requestKey != PostContentFragment.REQUEST_KEY) return@setFragmentResultListener
+            val newPostContent = bundle.getString(
+                PostContentFragment.RESULT_KEY
+            ) ?: return@setFragmentResultListener
+            viewModel.onSaveButtonClicked(newPostContent)
+        }
+
+        viewModel.navigateToPostContentScreenEvent.observe(this) { textToEdit ->
+            parentFragmentManager.commit {
+                val fragment = PostContentFragment.createInstance(textToEdit)
+                replace(R.id.fragmentContainer, fragment)
+                addToBackStack(null)
+            }
+        }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) = ActivityMainBinding.inflate(layoutInflater, container, false).also { binding ->
+        val adapter = PostsAdapter(viewModel)
+        binding.postsRecyclerView.adapter = adapter
+        // повесили наблюдателя за отрисовкой поста, как только в посте изменятся данные,
+        // то вызовется лямбда с ф-цией рендера, кот создана ниже
+        viewModel.data.observe(viewLifecycleOwner) { posts ->
+            adapter.submitList(posts)
+        }
+        binding.fab.setOnClickListener {
+            viewModel.onAddButtonClicked()
+        }
+    }.root
+
+    companion object {
+        const val TAG = "FeedFragment"
+    }
+}
+
+
+
