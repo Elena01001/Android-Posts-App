@@ -9,15 +9,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.PostsAdapter
-import ru.netology.nmedia.databinding.ActivityMainBinding
+import ru.netology.nmedia.databinding.FeedFragmentBinding
 import ru.netology.nmedia.viewModel.PostViewModel
+import ru.netology.nmedia.viewModel.SeparatePostViewModel
 
 
 class FeedFragment : Fragment() {
 
     private val viewModel: PostViewModel by viewModels() // делегирование для того, чтобы при перевороте экрана не сбрасывался текст
+   // private val separatePostViewModel: SeparatePostViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,12 +58,16 @@ class FeedFragment : Fragment() {
             viewModel.onSaveButtonClicked(newPostContent)
         }
 
+        //организация перехода к фрагменту postContentFragment
         viewModel.navigateToPostContentScreenEvent.observe(this) { textToEdit ->
-            parentFragmentManager.commit {
-                val fragment = PostContentFragment.createInstance(textToEdit)
-                replace(R.id.fragmentContainer, fragment)
-                addToBackStack(null)
-            }
+            val direction = FeedFragmentDirections.actionFeedFragmentToPostContentFragment(textToEdit)
+            findNavController().navigate(direction)
+        }
+
+        //организация перехода к фрагменту separatePostFragment
+        viewModel.separatePostViewEvent.observe(this) { postCardId ->
+            val direction = FeedFragmentDirections.actionFeedFragmentToSeparatePostFragment(postCardId)
+            findNavController().navigate(direction)
         }
     }
 
@@ -68,7 +75,7 @@ class FeedFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = ActivityMainBinding.inflate(layoutInflater, container, false).also { binding ->
+    ) = FeedFragmentBinding.inflate(layoutInflater, container, false).also { binding ->
         val adapter = PostsAdapter(viewModel)
         binding.postsRecyclerView.adapter = adapter
         // повесили наблюдателя за отрисовкой поста, как только в посте изменятся данные,

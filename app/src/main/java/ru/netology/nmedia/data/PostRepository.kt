@@ -11,9 +11,9 @@ interface PostRepository {
     fun share(postId: Long)
     fun delete(postId: Long)
     fun save(post: Post)
+    fun getById(postId: Long): Post?
 
     companion object {
         const val NEW_POST_ID = 0L
     }
-
 }

@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import ru.netology.nmedia.data.PostRepository
 import ru.netology.nmedia.dto.Post
 
-class InMemoryPostRepository : PostRepository {
+object InMemoryPostRepository : PostRepository {
 
     private var nextId = 1L
     private var posts = listOf(
@@ -134,5 +134,9 @@ class InMemoryPostRepository : PostRepository {
                 )
             ) + posts
         data.value = posts
+    }
+
+    override fun getById(postId: Long): Post? {
+        return posts.find { it.id == postId }
     }
 }

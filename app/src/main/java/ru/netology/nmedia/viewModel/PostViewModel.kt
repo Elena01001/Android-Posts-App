@@ -18,15 +18,17 @@ import ru.netology.nmedia.util.SingleLiveEvent
 class PostViewModel(
     application: Application
 ) : AndroidViewModel(application), PostInteractionListener {
-    // private val repository: PostRepository = InMemoryPostRepository()
+    private val repository: PostRepository = InMemoryPostRepository
     //private val repository: PostRepository = SharedPrefsPostRepository(application)
-    private val repository: PostRepository = FilePostRepository(application)
+    //private val repository: PostRepository = FilePostRepository(application)
 
     val data get() = repository.data
 
     val sharePostContent = SingleLiveEvent<String>()
 
     val videoPlayEvent = SingleLiveEvent<String>()
+
+    val separatePostViewEvent = SingleLiveEvent<Long>()
 
     // Эта LiveData хранит текст поста, который редактируется, или null, если новый текст добавляется пользователем
     val navigateToPostContentScreenEvent = SingleLiveEvent<String?>()
@@ -50,10 +52,10 @@ class PostViewModel(
         currentPost.value = null // сброс контента сохраненного поста в строке, где мы его печатали
     }
 
-    fun onCancelButtonClicked() {
+    /*fun onCancelButtonClicked() {
         currentPost.value = null
     }
-
+*/
     fun onAddButtonClicked() {
         navigateToPostContentScreenEvent.call()
     }
@@ -75,4 +77,8 @@ class PostViewModel(
         videoPlayEvent.value = post.videoLink // закидываем videoLink в поток
     }
 
+    override fun onPostCardClicked(post: Post) {
+        currentPost.value = post // закидываем пост в поток
+        separatePostViewEvent.value = post.id
+    }
 }
