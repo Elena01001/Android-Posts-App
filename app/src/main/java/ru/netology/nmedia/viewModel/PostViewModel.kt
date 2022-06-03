@@ -15,6 +15,9 @@ import ru.netology.nmedia.util.SingleLiveEvent
 
 //class PostViewModel : ViewModel(), PostInteractionListener {
 
+// ViewModel не должна знать о Binding и View,
+// ее задача - подготовить данные для отображения во фрагменте,
+// само отображение она не осуществляет.
 class PostViewModel(
     application: Application
 ) : AndroidViewModel(application), PostInteractionListener {

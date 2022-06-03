@@ -12,36 +12,49 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import ru.netology.nmedia.R
+import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.SeparatePostViewBinding
-import ru.netology.nmedia.viewModel.SeparatePostViewModel
+import ru.netology.nmedia.viewModel.PostViewModel
 
 
 class SeparatePostFragment : Fragment() {
 
     private val args by navArgs<SeparatePostFragmentArgs>()
 
-    private val separatePostViewModel: SeparatePostViewModel by viewModels()
+    private val separatePostViewModel: PostViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ) = SeparatePostViewBinding.inflate(layoutInflater, container, false).also { binding ->
-        separatePostViewModel.data.observe(viewLifecycleOwner) {
-            separatePostViewModel.getPostById(args.postCardId)
+        val postViewHolder =
+            PostsAdapter.ViewHolder(binding.separatePostView, separatePostViewModel)
+        separatePostViewModel.data.observe(viewLifecycleOwner) { posts ->
+            val separatedPost = posts.find { it.id == args.postCardId } ?: run {
+                findNavController().navigateUp() // пост был удален
+                return@observe
+            }
+            postViewHolder.bind(separatedPost)
+            /*в обработчике observe подписка идет на все посты, а внутри ищется нужный по id,
+            который затем передается ViewHolder на отображение. При этом, если поста не нашлось,
+            значит он был удален и текущий фрагмент нужно закрыть. Это делается через оператора Элвиса ?:: find возвращает Post?,
+            если поста не нашлось, то выходим, а если нашелся, то записываем в переменную и отображаем в bind.*/
         }
 
         //организация перехода к фрагменту postContentFragment
         separatePostViewModel.navigateToPostContentScreenEvent.observe(viewLifecycleOwner) { textToEdit ->
-            val direction = SeparatePostFragmentDirections.actionSeparatePostFragmentToPostContentFragment(textToEdit)
+            val direction =
+                SeparatePostFragmentDirections.actionSeparatePostFragmentToPostContentFragment(
+                    textToEdit
+                )
             findNavController().navigate(direction)
         }
         separatePostViewModel.videoPlayEvent.observe(viewLifecycleOwner) { videoLink ->
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(videoLink))
             startActivity(intent)
         }
-        separatePostViewModel.sharePostContent.observe(viewLifecycleOwner) {
-                postContent ->
+        separatePostViewModel.sharePostContent.observe(viewLifecycleOwner) { postContent ->
             val intent = Intent().apply {
                 action = Intent.ACTION_SEND  // создаем пустой интент и заполняем его через apply
                 putExtra(Intent.EXTRA_TEXT, postContent) // кладем некоторые данные, кот будем share
@@ -55,20 +68,17 @@ class SeparatePostFragment : Fragment() {
             startActivity(shareIntent)
         }
 
-      //  separatePostViewModel.onRemoveButtonClicked().observe(viewLifecycleOwner)
-
         // показываем новый экран в нашем приложении
         // данная ф-ция будет вызвана при завершении PostContentActivity
         setFragmentResultListener(
-            requestKey = PostContentFragment.REQUEST_KEY
+            requestKey = PostContentFragment.REQUEST_KEY_2
         ) { requestKey, bundle ->
-            if (requestKey != PostContentFragment.REQUEST_KEY) return@setFragmentResultListener
+            if (requestKey != PostContentFragment.REQUEST_KEY_2) return@setFragmentResultListener
             val newPostContent = bundle.getString(
-                PostContentFragment.RESULT_KEY
+                PostContentFragment.RESULT_KEY_2
             ) ?: return@setFragmentResultListener
             separatePostViewModel.onSaveButtonClicked(newPostContent)
         }
     }.root
-
 
 }

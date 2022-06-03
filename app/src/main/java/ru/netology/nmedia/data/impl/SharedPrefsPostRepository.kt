@@ -26,6 +26,11 @@ class SharedPrefsPostRepository(
         prefs.edit { putLong(NEXT_ID_PREFS_KEY, newValue) }
     }
 
+   /* Здесь 2 переменные (текущий список постов posts и LiveData(живой поток) со списком постов)
+   по факту совмещены в одну - LiveData.
+   Переменная posts - это просто “псевдоним”, когда на деле и при записи и при чтении идет обращение к LiveData (data.value).
+   А тип data.value - nullable, поэтому проверка на null нужна.*/
+
     private var posts //= emptyList<Post>()
         get() = checkNotNull(data.value) {
             "Data value should not be null"
@@ -92,10 +97,6 @@ class SharedPrefsPostRepository(
                     id = nextId++
                 )
             ) + posts
-    }
-
-    override fun getById(postId: Long): Post? {
-        return posts.find { it.id == postId }
     }
 
     private companion object {

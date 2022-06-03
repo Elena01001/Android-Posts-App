@@ -85,6 +85,10 @@ object InMemoryPostRepository : PostRepository {
         ),
     ).reversed()
 
+  /*  Использую две переменные: текущий список постов posts и LiveData со списком постов, которая может обновляться.
+  Если необходимо изменить данные, то меняется список постов posts и затем он записывается в LiveData.
+  То есть, используется отдельная переменная для хранения текущего списка, и ее тип не nullable, поэтому проверки на null нет.*/
+
     override val data = MutableLiveData(posts)
 
     override fun like(postId: Long) {
@@ -134,9 +138,5 @@ object InMemoryPostRepository : PostRepository {
                 )
             ) + posts
         data.value = posts
-    }
-
-    override fun getById(postId: Long): Post? {
-        return posts.find { it.id == postId }
     }
 }

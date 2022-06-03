@@ -49,7 +49,9 @@ class PostContentFragment : Fragment() {
     // чтобы различать 2 рез-та из 2 разных фрагментов
     companion object {
         const val REQUEST_KEY = "requestKey"
+        const val REQUEST_KEY_2 = "requestKey2"
         const val RESULT_KEY = "postNewContent"
+        const val RESULT_KEY_2 = "postNewContent2"
 
     }
 

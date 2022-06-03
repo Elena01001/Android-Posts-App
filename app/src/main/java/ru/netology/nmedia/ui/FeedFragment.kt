@@ -14,13 +14,11 @@ import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.FeedFragmentBinding
 import ru.netology.nmedia.viewModel.PostViewModel
-import ru.netology.nmedia.viewModel.SeparatePostViewModel
 
 
 class FeedFragment : Fragment() {
 
     private val viewModel: PostViewModel by viewModels() // делегирование для того, чтобы при перевороте экрана не сбрасывался текст
-   // private val separatePostViewModel: SeparatePostViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
