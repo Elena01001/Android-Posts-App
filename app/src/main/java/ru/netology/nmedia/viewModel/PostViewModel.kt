@@ -71,7 +71,7 @@ class PostViewModel(
 
     override fun onRemoveButtonClicked(post: Post) = repository.delete(post.id)
     override fun onEditButtonClicked(post: Post) {
-        currentPost.value = post // закидываем пост в поток
+        currentPost.value = post // закидываем пост в поток редактирования
         navigateToPostContentScreenEvent.value =
             post.content // отобразится контент текущего поста на экране
     }
@@ -81,7 +81,6 @@ class PostViewModel(
     }
 
     override fun onPostCardClicked(post: Post) {
-        currentPost.value = post // закидываем пост в поток
         separatePostViewEvent.value = post.id
     }
 }

@@ -11,10 +11,12 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import ru.netology.nmedia.databinding.PostContentFragmentBinding
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.ui.PostContentFragment.Companion.REQUEST_KEY
 
 
 class PostContentFragment : Fragment() {
@@ -42,6 +44,8 @@ class PostContentFragment : Fragment() {
             // конвертируем текст в строку, укладываем в заготовленный бандл
             resultBundle.putString(RESULT_KEY, binding.edit.text.toString())
             setFragmentResult(REQUEST_KEY, resultBundle)
+            resultBundle.putString(RESULT_KEY_2, binding.edit.text.toString())
+            setFragmentResult(REQUEST_KEY_2, resultBundle)
         }
         findNavController().popBackStack() // навигируемся назад, фрагмент выкидывается из backstackа фрагментов
     }
