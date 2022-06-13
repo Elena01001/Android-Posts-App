@@ -44,19 +44,14 @@ class PostContentFragment : Fragment() {
             // конвертируем текст в строку, укладываем в заготовленный бандл
             resultBundle.putString(RESULT_KEY, binding.edit.text.toString())
             setFragmentResult(REQUEST_KEY, resultBundle)
-            resultBundle.putString(RESULT_KEY_2, binding.edit.text.toString())
-            setFragmentResult(REQUEST_KEY_2, resultBundle)
         }
         findNavController().popBackStack() // навигируемся назад, фрагмент выкидывается из backstackа фрагментов
     }
 
-    // чтобы различать 2 рез-та из 2 разных фрагментов
+    // ключи для передачи данных между фрагментами
     companion object {
         const val REQUEST_KEY = "requestKey"
-        const val REQUEST_KEY_2 = "requestKey2"
         const val RESULT_KEY = "postNewContent"
-        const val RESULT_KEY_2 = "postNewContent2"
-
     }
 
 

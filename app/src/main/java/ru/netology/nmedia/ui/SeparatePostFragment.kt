@@ -71,11 +71,11 @@ class SeparatePostFragment : Fragment() {
         // показываем новый экран в нашем приложении
         // данная ф-ция будет вызвана при завершении PostContentActivity
         setFragmentResultListener(
-            requestKey = PostContentFragment.REQUEST_KEY_2
+            requestKey = PostContentFragment.REQUEST_KEY
         ) { requestKey, bundle ->
-            if (requestKey != PostContentFragment.REQUEST_KEY_2) return@setFragmentResultListener
+            if (requestKey != PostContentFragment.REQUEST_KEY) return@setFragmentResultListener
             val newPostContent = bundle.getString(
-                PostContentFragment.RESULT_KEY_2
+                PostContentFragment.RESULT_KEY
             ) ?: return@setFragmentResultListener
             separatePostViewModel.onSaveButtonClicked(newPostContent)
         }

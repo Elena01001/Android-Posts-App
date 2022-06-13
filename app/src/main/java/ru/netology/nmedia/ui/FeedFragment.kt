@@ -44,6 +44,23 @@ class FeedFragment : Fragment() {
             startActivity(intent)
         }
 
+        //организация перехода к фрагменту postContentFragment
+        viewModel.navigateToPostContentScreenEvent.observe(this) { textToEdit ->
+            val direction = FeedFragmentDirections.actionFeedFragmentToPostContentFragment(textToEdit)
+            findNavController().navigate(direction)
+        }
+
+        //организация перехода к фрагменту separatePostFragment
+        viewModel.separatePostViewEvent.observe(this) { postCardId ->
+            val direction = FeedFragmentDirections.actionFeedFragmentToSeparatePostFragment(postCardId)
+            findNavController().navigate(direction)
+        }
+    }
+    // Можно использовать одинаковый ключ в обоих фрагментах,
+    // но при появлении FeedFragment устанавливать обработчик заново,
+    // чтобы он переписал тот обработчик, что был установлен SinglePostFragment
+    override fun onResume() {
+        super.onResume()
         // показываем новый экран в нашем приложении
         // данная ф-ция будет вызвана при завершении PostContentActivity
         setFragmentResultListener(
@@ -56,17 +73,6 @@ class FeedFragment : Fragment() {
             viewModel.onSaveButtonClicked(newPostContent)
         }
 
-        //организация перехода к фрагменту postContentFragment
-        viewModel.navigateToPostContentScreenEvent.observe(this) { textToEdit ->
-            val direction = FeedFragmentDirections.actionFeedFragmentToPostContentFragment(textToEdit)
-            findNavController().navigate(direction)
-        }
-
-        //организация перехода к фрагменту separatePostFragment
-        viewModel.separatePostViewEvent.observe(this) { postCardId ->
-            val direction = FeedFragmentDirections.actionFeedFragmentToSeparatePostFragment(postCardId)
-            findNavController().navigate(direction)
-        }
     }
 
     override fun onCreateView(
