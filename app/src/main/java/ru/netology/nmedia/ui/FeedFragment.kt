@@ -44,18 +44,6 @@ class FeedFragment : Fragment() {
             startActivity(intent)
         }
 
-        // показываем новый экран в нашем приложении
-        // данная ф-ция будет вызвана при завершении PostContentActivity
-        setFragmentResultListener(
-            requestKey = PostContentFragment.REQUEST_KEY
-        ) { requestKey, bundle ->
-            if (requestKey != PostContentFragment.REQUEST_KEY) return@setFragmentResultListener
-            val newPostContent = bundle.getString(
-                PostContentFragment.RESULT_KEY
-            ) ?: return@setFragmentResultListener
-            viewModel.onSaveButtonClicked(newPostContent)
-        }
-
         //организация перехода к фрагменту postContentFragment
         viewModel.navigateToPostContentScreenEvent.observe(this) { textToEdit ->
             val direction = FeedFragmentDirections.actionFeedFragmentToPostContentFragment(textToEdit)
@@ -66,6 +54,21 @@ class FeedFragment : Fragment() {
         viewModel.separatePostViewEvent.observe(this) { postCardId ->
             val direction = FeedFragmentDirections.actionFeedFragmentToSeparatePostFragment(postCardId)
             findNavController().navigate(direction)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // показываем новый экран в нашем приложении
+        // данная ф-ция будет вызвана при завершении PostContentActivity
+        setFragmentResultListener(
+            requestKey = PostContentFragment.REQUEST_KEY
+        ) { requestKey, bundle ->
+            if (requestKey != PostContentFragment.REQUEST_KEY) return@setFragmentResultListener
+            val newPostContent = bundle.getString(
+                PostContentFragment.RESULT_KEY
+            ) ?: return@setFragmentResultListener
+            viewModel.onSaveButtonClicked(newPostContent)
         }
     }
 

@@ -14,7 +14,9 @@ object PostsTable {
             ${Column.LIKED_BY_ME.columnName} BOOLEAN NOT NULL DEFAULT 0,
             ${Column.LIKES.columnName} INTEGER NOT NULL DEFAULT 0,
             ${Column.SHARES.columnName} INTEGER NOT NULL DEFAULT 0,
-            ${Column.SHARED.columnName} BOOLEAN NOT NULL DEFAULT 0
+            ${Column.SHARED.columnName} BOOLEAN NOT NULL DEFAULT 0,
+            ${Column.VIEWINGS.columnName} INTEGER NOT NULL DEFAULT 0,
+            ${Column.VIDEOLINK.columnName} TEXT NOT NULL
         );
         """.trimIndent()
     /*  */
@@ -30,7 +32,9 @@ object PostsTable {
         LIKED_BY_ME("likedByMe"),
         LIKES("likes"),
         SHARES("shares"),
-        SHARED("shared")
+        SHARED("shared"),
+        VIEWINGS("viewings"),
+        VIDEOLINK("videoLink")
     }
 
 }

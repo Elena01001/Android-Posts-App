@@ -15,5 +15,7 @@ fun Cursor.toPost() = Post(
     // если нам придет инт, кот != 0, то запишется в true, все, что == 0, то запишется в false
     likedByMe = getInt(getColumnIndexOrThrow(PostsTable.Column.LIKED_BY_ME.columnName)) != 0,
     shares = getInt(getColumnIndexOrThrow(PostsTable.Column.SHARES.columnName)),
-    shared = getInt(getColumnIndexOrThrow(PostsTable.Column.SHARED.columnName)) != 0
+    shared = getInt(getColumnIndexOrThrow(PostsTable.Column.SHARED.columnName)) != 0,
+    viewings = getInt(getColumnIndexOrThrow(PostsTable.Column.VIEWINGS.columnName)),
+    videoLink = getString(getColumnIndexOrThrow(PostsTable.Column.VIDEOLINK.columnName))
 )
