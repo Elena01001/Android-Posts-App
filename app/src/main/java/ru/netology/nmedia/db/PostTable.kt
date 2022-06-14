@@ -16,7 +16,7 @@ object PostsTable {
             ${Column.SHARES.columnName} INTEGER NOT NULL DEFAULT 0,
             ${Column.SHARED.columnName} BOOLEAN NOT NULL DEFAULT 0,
             ${Column.VIEWINGS.columnName} INTEGER NOT NULL DEFAULT 0,
-            ${Column.VIDEOLINK.columnName} TEXT NOT NULL
+            ${Column.VIDEOLINK.columnName} TEXT NOT NULL DEFAULT ""
         );
         """.trimIndent()
     /*  */
