@@ -18,7 +18,9 @@ import ru.netology.nmedia.viewModel.PostViewModel
 
 class FeedFragment : Fragment() {
 
-    private val viewModel: PostViewModel by viewModels() // делегирование для того, чтобы при перевороте экрана не сбрасывался текст
+    private val viewModel: PostViewModel by viewModels(ownerProducer = ::requireParentFragment)
+    // делегирование для того, чтобы при перевороте экрана не сбрасывался текст
+    // в кач-ве аргумента объединяем все вьюмодели, чтобы все изменения передавались из одного фрагмента в другой
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
