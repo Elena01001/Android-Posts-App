@@ -1,7 +1,5 @@
 package ru.netology.nmedia.adapter
 
-import android.app.Activity
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +15,7 @@ import ru.netology.nmedia.dto.Post
 // но он оптимально создает вьюхи только в нужный момент
 // Это связующее звено между данными и вьюхами!!!
 
-internal class PostsAdapter(
+class PostsAdapter(
     private val interactionListener: PostInteractionListener
 ) : ListAdapter<Post, PostsAdapter.ViewHolder>(DiffCallback) {
 
@@ -80,6 +78,13 @@ internal class PostsAdapter(
         init {
             binding.videoContent.setOnClickListener { listener.onVideoPlayButtonClicked(post)}
             binding.videoPlay.setOnClickListener { listener.onVideoPlayButtonClicked(post)}
+        }
+
+        init {
+            binding.content.setOnClickListener { listener.onPostCardClicked(post) }
+            binding.authorName.setOnClickListener { listener.onPostCardClicked(post) }
+            binding.published.setOnClickListener { listener.onPostCardClicked(post) }
+            binding.avatar.setOnClickListener { listener.onPostCardClicked(post) }
         }
 
         fun bind(post: Post) {

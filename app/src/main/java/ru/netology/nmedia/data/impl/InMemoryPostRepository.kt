@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import ru.netology.nmedia.data.PostRepository
 import ru.netology.nmedia.dto.Post
 
-class InMemoryPostRepository : PostRepository {
+object InMemoryPostRepository : PostRepository {
 
     private var nextId = 1L
     private var posts = listOf(
@@ -84,6 +84,10 @@ class InMemoryPostRepository : PostRepository {
 
         ),
     ).reversed()
+
+  /*  Использую две переменные: текущий список постов posts и LiveData со списком постов, которая может обновляться.
+  Если необходимо изменить данные, то меняется список постов posts и затем он записывается в LiveData.
+  То есть, используется отдельная переменная для хранения текущего списка, и ее тип не nullable, поэтому проверки на null нет.*/
 
     override val data = MutableLiveData(posts)
 
