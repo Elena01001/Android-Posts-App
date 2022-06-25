@@ -11,10 +11,12 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import ru.netology.nmedia.databinding.PostContentFragmentBinding
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.ui.PostContentFragment.Companion.REQUEST_KEY
 
 
 class PostContentFragment : Fragment() {
@@ -46,7 +48,8 @@ class PostContentFragment : Fragment() {
         findNavController().popBackStack() // навигируемся назад, фрагмент выкидывается из backstackа фрагментов
     }
 
-    // чтобы передавать данные между фрагментами
+
+    // ключи для передачи данных между фрагментами
     companion object {
         const val REQUEST_KEY = "requestKey"
         const val RESULT_KEY = "postNewContent"
