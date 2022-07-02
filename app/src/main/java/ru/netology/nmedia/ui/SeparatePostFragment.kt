@@ -21,7 +21,7 @@ class SeparatePostFragment : Fragment() {
 
     private val args by navArgs<SeparatePostFragmentArgs>()
 
-    private val separatePostViewModel: PostViewModel by viewModels()
+    private val separatePostViewModel: PostViewModel by viewModels(ownerProducer = ::requireParentFragment)
 
     override fun onCreateView(
         inflater: LayoutInflater,

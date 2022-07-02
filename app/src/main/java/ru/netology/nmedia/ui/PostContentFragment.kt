@@ -48,10 +48,12 @@ class PostContentFragment : Fragment() {
         findNavController().popBackStack() // навигируемся назад, фрагмент выкидывается из backstackа фрагментов
     }
 
+
     // ключи для передачи данных между фрагментами
     companion object {
         const val REQUEST_KEY = "requestKey"
         const val RESULT_KEY = "postNewContent"
+
     }
 
 

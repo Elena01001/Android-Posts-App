@@ -18,7 +18,9 @@ import ru.netology.nmedia.viewModel.PostViewModel
 
 class FeedFragment : Fragment() {
 
-    private val viewModel: PostViewModel by viewModels() // делегирование для того, чтобы при перевороте экрана не сбрасывался текст
+    private val viewModel: PostViewModel by viewModels(ownerProducer = ::requireParentFragment)
+    // делегирование для того, чтобы при перевороте экрана не сбрасывался текст
+    // в кач-ве аргумента объединяем все вьюмодели, чтобы все изменения передавались из одного фрагмента в другой
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +58,7 @@ class FeedFragment : Fragment() {
             findNavController().navigate(direction)
         }
     }
+
     // Можно использовать одинаковый ключ в обоих фрагментах,
     // но при появлении FeedFragment устанавливать обработчик заново,
     // чтобы он переписал тот обработчик, что был установлен SinglePostFragment
@@ -72,7 +75,6 @@ class FeedFragment : Fragment() {
             ) ?: return@setFragmentResultListener
             viewModel.onSaveButtonClicked(newPostContent)
         }
-
     }
 
     override fun onCreateView(
