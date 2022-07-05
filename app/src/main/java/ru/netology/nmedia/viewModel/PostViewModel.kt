@@ -5,15 +5,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import ru.netology.nmedia.adapter.PostInteractionListener
 import ru.netology.nmedia.data.PostRepository
-<<<<<<< HEAD
 import ru.netology.nmedia.data.impl.RoomPostRepository
-=======
 import ru.netology.nmedia.data.impl.FilePostRepository
 import ru.netology.nmedia.data.impl.InMemoryPostRepository
 
-import ru.netology.nmedia.data.impl.SQLitePostRepository
+//import ru.netology.nmedia.data.impl.SQLitePostRepository
 import ru.netology.nmedia.data.impl.SharedPrefsPostRepository
->>>>>>> 075cf65fcc6ffba803d6ac1ee5eafbc5cfbb6acc
 import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.util.SingleLiveEvent
@@ -26,12 +23,10 @@ import ru.netology.nmedia.util.SingleLiveEvent
 class PostViewModel(
     application: Application
 ) : AndroidViewModel(application), PostInteractionListener {
-<<<<<<< HEAD
-    private val repository: PostRepository = RoomPostRepository(
-=======
 
-    private val repository: PostRepository = SQLitePostRepository(
->>>>>>> 075cf65fcc6ffba803d6ac1ee5eafbc5cfbb6acc
+    private val repository: PostRepository = RoomPostRepository(
+   // private val repository: PostRepository = SQLitePostRepository(
+
         dao = AppDb.getInstance(
             context = application
         ).postDao
