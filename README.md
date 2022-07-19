@@ -1,4 +1,4 @@
-## First-Android-App
+## Android-Posts-App
 Данный проект - это многоэкранное приложение c локализацией на 2 языках, где пользователи могут создавать посты, лайкать их, делиться ими с другими Android приложениями, добавлять видео с YouTube
 
 Используемые технологии: Android Studio, Kotlin, Android Jetpack (Navigation, View Binding), Room database, Shared Preferences, Intents, Fragments, Material Design, RecyclerView, MVVM, GitHub Actions, Pull Requests
